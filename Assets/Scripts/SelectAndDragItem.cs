@@ -57,6 +57,7 @@ public class SelectAndDragItem : MonoBehaviour
 
     void ReleaseItem()
     {
+        _selectedItem.GoPosition();
         _selectedItem = null;
     }
 
