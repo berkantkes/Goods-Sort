@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class ObjectPoolManager : MonoBehaviour
 {
-    public static ObjectPoolManager Instance; // Singleton
+    public static ObjectPoolManager Instance;
 
-    [SerializeField] private List<PoolItemData> itemPrefabs; // ItemType -> Prefab eşleşmeleri
-    private Dictionary<ItemType, Queue<GameObject>> poolDictionary; // Pool
+    [SerializeField] private List<PoolItemData> itemPrefabs;
+    private Dictionary<ItemType, Queue<GameObject>> poolDictionary; 
 
     private void Awake()
     {
@@ -16,7 +16,6 @@ public class ObjectPoolManager : MonoBehaviour
         poolDictionary = new Dictionary<ItemType, Queue<GameObject>>();
     }
 
-    // 💡 Pool'u başlat: Belirtilen itemType için belirli sayıda nesne oluştur
     public void InitializePool(ItemType itemType, int amount)
     {
         if (!poolDictionary.ContainsKey(itemType))
@@ -37,7 +36,6 @@ public class ObjectPoolManager : MonoBehaviour
         }
     }
 
-    // 🟢 Pool'dan obje çek
     public GameObject GetFromPool(ItemType itemType)
     {
         if (poolDictionary.ContainsKey(itemType) && poolDictionary[itemType].Count > 0)
@@ -60,7 +58,6 @@ public class ObjectPoolManager : MonoBehaviour
         return null;
     }
 
-    // 🔴 Objeyi tekrar pool'a gönder
     public void ReturnToPool(ItemType itemType, GameObject obj)
     {
         obj.SetActive(false);

@@ -13,14 +13,11 @@ public class LevelManager : MonoBehaviour
 
     private void InitializeObjectPool()
     {
-        // 1️⃣ LevelData'dan tüm itemleri al
         List<ItemType> allItems = levelData.GetAllItemTypesList();
 
-        // 2️⃣ Aynı türden kaç tane olduğunu hesapla
         var itemCounts = allItems.GroupBy(x => x)
             .ToDictionary(g => g.Key, g => g.Count());
-
-        // 3️⃣ ObjectPoolManager'a bildir
+        
         foreach (var item in itemCounts)
         {
             ObjectPoolManager.Instance.InitializePool(item.Key, item.Value);

@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "AllLevelsData", menuName = "Match3/All Levels Data")]
 public class AllLevelsData : ScriptableObject
 {
-    public LevelData[] levels; // Tüm LevelData'ları burada saklıyoruz
+    public LevelData[] levels;
 
     public LevelData GetLevel(int levelNumber)
     {
