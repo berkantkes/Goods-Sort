@@ -14,16 +14,3 @@ public class LayerData
         return new List<ItemType> { FirstItemType, SecondItemType, ThirdItemType };
     }
 }
-
-
-
-public enum ItemType
-{
-    None,
-    Apple,
-    Banana,
-    Cherry,
-    Diamond,
-    Gold,
-    Silver
-}

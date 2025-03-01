@@ -5,7 +5,7 @@ public class SelectAndDragItem : MonoBehaviour
     private Camera _mainCamera;
     private ItemController _selectedItem;
     private Vector3 _offset;
-    private float _fixedZ; 
+    private float _fixedZ = -.8f; 
     private Transform _lastHoveredShelf = null;
 
     void Start()
@@ -34,8 +34,9 @@ public class SelectAndDragItem : MonoBehaviour
     {
         Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
+        int shelfLayerMask = LayerMask.GetMask("ItemLayer"); 
 
-        if (Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, shelfLayerMask))
         {
             if (hit.collider.CompareTag("Item"))
             {

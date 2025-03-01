@@ -8,6 +8,9 @@ public class ShelfSpaceController : MonoBehaviour
 
     public void AttachItem(ItemController item)
     {
+        if (!item)
+            return;
+        
         _attachedItem = item;
         _attachedItem.SetShelfSpace(this);
     }

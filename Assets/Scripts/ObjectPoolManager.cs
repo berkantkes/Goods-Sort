@@ -5,24 +5,24 @@ public class ObjectPoolManager : MonoBehaviour
 {
     public static ObjectPoolManager Instance;
 
-    [SerializeField] private List<PoolItemData> itemPrefabs;
-    private Dictionary<ItemType, Queue<GameObject>> poolDictionary; 
+    [SerializeField] private PoolData poolData;
+    private Dictionary<ItemType, Queue<ItemController>> poolDictionary;
 
     private void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
         
-        poolDictionary = new Dictionary<ItemType, Queue<GameObject>>();
+        poolDictionary = new Dictionary<ItemType, Queue<ItemController>>();
     }
 
     public void InitializePool(ItemType itemType, int amount)
     {
         if (!poolDictionary.ContainsKey(itemType))
-            poolDictionary[itemType] = new Queue<GameObject>();
+            poolDictionary[itemType] = new Queue<ItemController>();
 
-        PoolItemData itemData = itemPrefabs.Find(x => x.itemType == itemType);
-        if (itemData == null)
+        ItemController itemPrefab = poolData.GetItemController(itemType);
+        if (itemPrefab == null)
         {
             Debug.LogError($"ItemType için prefab bulunamadı: {itemType}");
             return;
@@ -30,37 +30,37 @@ public class ObjectPoolManager : MonoBehaviour
 
         for (int i = 0; i < amount; i++)
         {
-            GameObject obj = Instantiate(itemData.prefab);
-            obj.SetActive(false);
+            ItemController obj = Instantiate(itemPrefab, transform); // Direkt ItemController'ı kullanıyoruz
+            obj.gameObject.SetActive(false);
             poolDictionary[itemType].Enqueue(obj);
         }
     }
 
-    public GameObject GetFromPool(ItemType itemType)
+    public ItemController GetFromPool(ItemType itemType)
     {
         if (poolDictionary.ContainsKey(itemType) && poolDictionary[itemType].Count > 0)
         {
-            GameObject obj = poolDictionary[itemType].Dequeue();
-            obj.SetActive(true);
+            ItemController obj = poolDictionary[itemType].Dequeue();
+            obj.gameObject.SetActive(true);
             return obj;
         }
         else
         {
             Debug.LogWarning($"Poolda {itemType} kalmadı, yeni oluşturuluyor...");
-            PoolItemData itemData = itemPrefabs.Find(x => x.itemType == itemType);
-            if (itemData != null)
+            ItemController itemPrefab = poolData.GetItemController(itemType);
+            if (itemPrefab != null)
             {
-                GameObject obj = Instantiate(itemData.prefab);
-                obj.SetActive(true);
+                ItemController obj = Instantiate(itemPrefab);
+                obj.gameObject.SetActive(true);
                 return obj;
             }
         }
         return null;
     }
 
-    public void ReturnToPool(ItemType itemType, GameObject obj)
+    public void ReturnToPool(ItemType itemType, ItemController obj)
     {
-        obj.SetActive(false);
+        obj.gameObject.SetActive(false);
         poolDictionary[itemType].Enqueue(obj);
     }
 }

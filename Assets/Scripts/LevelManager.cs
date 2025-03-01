@@ -5,10 +5,12 @@ using UnityEngine;
 public class LevelManager : MonoBehaviour
 {
     [SerializeField] private LevelData levelData;
+    [SerializeField] private ShelfController _shelfController;
 
     private void Start()
     {
         InitializeObjectPool();
+        InitializeLevel();
     }
 
     private void InitializeObjectPool()
@@ -22,6 +24,15 @@ public class LevelManager : MonoBehaviour
         {
             ObjectPoolManager.Instance.InitializePool(item.Key, item.Value);
             Debug.Log($"Pool oluşturuluyor: {item.Key} -> {item.Value} adet");
+        }
+    }
+
+    private void InitializeLevel()
+    {
+        foreach (var shelfData in levelData.shelfsData)
+        {
+            ShelfController shelfController = Instantiate(_shelfController, transform);
+            shelfController.SetShelf(shelfData);
         }
     }
 }

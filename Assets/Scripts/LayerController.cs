@@ -11,7 +11,9 @@ public class LayerController : MonoBehaviour
     [SerializeField] private List<ShelfSpaceController> _shelfSpaces;
     public void SetLayer(LayerData layerData)
     {
-        
+        _shelfSpaces[0].AttachItem(ObjectPoolManager.Instance.GetFromPool(layerData.FirstItemType));
+        _shelfSpaces[1].AttachItem(ObjectPoolManager.Instance.GetFromPool(layerData.SecondItemType));
+        _shelfSpaces[2].AttachItem(ObjectPoolManager.Instance.GetFromPool(layerData.ThirdItemType));
     }
 
     public bool IsAvailable(Vector3 point, ItemController item)

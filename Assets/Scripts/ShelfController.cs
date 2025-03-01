@@ -5,9 +5,9 @@ using UnityEngine;
 public class ShelfController : MonoBehaviour
 {
     [SerializeField] private LayerController _firstLayer;
-    [SerializeField] private LayerController _secondLayerLayer;
+    [SerializeField] private LayerController _secondLayer;
 
-    private int _layerCount;
+    private int _currentLayerCount = 0;
     private LayerData[] _layers;
 
     public void SetShelf(ShelfData shelfData)
@@ -20,7 +20,15 @@ public class ShelfController : MonoBehaviour
 
     private void SetLayers()
     {
-        //_firstLayer.SetLayer(_layers[]);
+        if (_currentLayerCount <= _layers.Length-1)
+        {
+            _firstLayer.SetLayer(_layers[_currentLayerCount]);
+        }
+
+        if (_currentLayerCount+1 <= _layers.Length-1)
+        {
+            _secondLayer.SetLayer(_layers[_currentLayerCount+1]);
+        }
     }
 
     public bool SetItemToShelf(Vector3 point, ItemController item)
