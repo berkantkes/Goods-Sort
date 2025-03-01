@@ -14,7 +14,17 @@ public class ShelfController : MonoBehaviour
     {
         transform.position = shelfData.position;
         _layers = shelfData.layers;
-        
+
+        SetLayers();
     }
 
+    private void SetLayers()
+    {
+        //_firstLayer.SetLayer(_layers[]);
+    }
+
+    public bool SetItemToShelf(Vector3 point, ItemController item)
+    {
+        return _firstLayer.IsAvailable(point, item);
+    }
 }
