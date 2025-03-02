@@ -16,40 +16,32 @@ public class LevelData : ScriptableObject
     private void OnValidate()
     {
         AdjustShelfs();
+        
+        if (Application.isPlaying)
+        {
+            FindObjectOfType<LevelManager>()?.ReloadCurrentLevel();
+        }
     }
-    
 
     public void AdjustShelfs()
     {
         int totalShelfs = columns * rows;
 
-        // Listeyi yeniden boyutlandırma
         if (shelfsData.Count > totalShelfs)
         {
-            shelfsData.RemoveRange(totalShelfs, shelfsData.Count - totalShelfs); 
-        }
-        else if (shelfsData.Count < totalShelfs)
-        {
-            int countToAdd = totalShelfs - shelfsData.Count;
-            for (int i = 0; i < countToAdd; i++)
-            {
-                shelfsData.Add(new ShelfData()); 
-            }
+            shelfsData.RemoveRange(totalShelfs, shelfsData.Count - totalShelfs);
         }
 
-        
-        for (int row = 0; row < rows; row++)
+        for (int i = 0; i < shelfsData.Count; i++)
         {
-            for (int col = 0; col < columns; col++)
-            {
-                int index = row * columns + col;
-                shelfsData[index].rowIndex = row;
-                shelfsData[index].columnIndex = col;
-                shelfsData[index].position = new Vector2(col * spacing, row * spacing);
-            }
+            int row = i / columns;
+            int col = i % columns;
+            shelfsData[i].rowIndex = row;
+            shelfsData[i].columnIndex = col;
+            //shelfsData[i].position = new Vector2(col * spacing, row * spacing);
         }
     }
-    
+
     public List<ItemType> GetAllItemTypesList()
     {
         List<ItemType> allItems = new List<ItemType>();
@@ -65,7 +57,6 @@ public class LevelData : ScriptableObject
             }
         }
 
-        
         return allItems.Where(item => item != ItemType.None).ToList();
     }
 }

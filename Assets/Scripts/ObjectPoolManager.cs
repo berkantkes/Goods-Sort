@@ -30,7 +30,7 @@ public class ObjectPoolManager : MonoBehaviour
 
         for (int i = 0; i < amount; i++)
         {
-            ItemController obj = Instantiate(itemPrefab, transform); // Direkt ItemController'ı kullanıyoruz
+            ItemController obj = Instantiate(itemPrefab, transform);
             obj.gameObject.SetActive(false);
             poolDictionary[itemType].Enqueue(obj);
         }
@@ -63,4 +63,20 @@ public class ObjectPoolManager : MonoBehaviour
         obj.gameObject.SetActive(false);
         poolDictionary[itemType].Enqueue(obj);
     }
+
+    public void ClearAllPools()
+    {
+        foreach (var pool in poolDictionary)
+        {
+            while (pool.Value.Count > 0)
+            {
+                ItemController obj = pool.Value.Dequeue();
+                obj.gameObject.SetActive(false);  // **Sadece devre dışı bırak**
+            }
+        }
+
+        poolDictionary.Clear(); // Havuzu sıfırla
+        Debug.Log("Tüm object pool'lar temizlendi!");
+    }
+
 }
