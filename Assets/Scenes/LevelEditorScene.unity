@@ -854,6 +854,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
+    - target: {fileID: 4852555091677055404, guid: d50bb97f3da0cec48a6051ed67680a51,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5121154950698008342, guid: d50bb97f3da0cec48a6051ed67680a51,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1171,6 +1176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 793acefc27b27e04c8f7e7e9d400a264, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _levelEditorManager: {fileID: 1234998447}
   allLevelsData: {fileID: 11400000, guid: 0fbf80ada9b99584da891667d2eb8a7f, type: 2}
   contentPanel: {fileID: 1414034355}
   levelButtonPrefab: {fileID: 7756792871071576321, guid: 2f78ed78417bf1f44a43e2d604c6e7d4,

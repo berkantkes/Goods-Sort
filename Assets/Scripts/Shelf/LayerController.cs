@@ -1,15 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 public class LayerController : MonoBehaviour
 {
-    [SerializeField] private ShelfSpaceController _firstShelfSpace;
-    [SerializeField] private ShelfSpaceController _secondShelfSpace;
-    [SerializeField] private ShelfSpaceController _thirdShelfSpace;
-
     [SerializeField] private List<ShelfSpaceController> _frontShelfSpaces;
     [SerializeField] private List<ShelfSpaceController> _backShelfSpaces;
 
@@ -79,6 +76,11 @@ public class LayerController : MonoBehaviour
             SetBackLayer(_layerData[_currentLayerCount+1]);
         }
     }
+    
+    public bool AreAllFrontShelfSpacesEmpty()
+    {
+        return _frontShelfSpaces.All(space => space.IsAvailableShelfSpace());
+    }
 
     public void IsMatch()
     {
@@ -113,6 +115,7 @@ public class LayerController : MonoBehaviour
                 ObjectPoolManager.Instance.ReturnToPool(item.GetItemType(), item);
             }
             ChangeLayer();
+            _shelfController.ControlGameStatus();
         }
     }
     

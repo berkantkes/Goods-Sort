@@ -50,7 +50,7 @@ public class LevelManager : MonoBehaviour
         foreach (var shelfData in _allLevelsData.GetLevel(_currentLevel).shelfsData)
         {
             ShelfController shelfController = Instantiate(_shelfController, transform);
-            shelfController.SetShelf(shelfData);
+            shelfController.SetShelf(shelfData, this);
             _spawnedShelves.Add(shelfController); // **Oluşturulan shelf'leri listeye ekle**
         }
     }
@@ -65,4 +65,15 @@ public class LevelManager : MonoBehaviour
 
         ObjectPoolManager.Instance.ClearAllPools();
     }
+
+    public void ControlGameStatus()
+    {
+        bool allShelvesEmpty = _spawnedShelves.All(shelf => shelf.AreAllFrontShelfSpacesEmpty());
+
+        if (allShelvesEmpty)
+        {
+            Debug.Log("Game Over");
+        }
+    }
+
 }

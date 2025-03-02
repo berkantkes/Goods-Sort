@@ -20,32 +20,22 @@ MonoBehaviour:
   shelfsData:
   - rowIndex: 0
     columnIndex: 0
-    position: {x: 0, y: 0}
+    position: {x: -0.5, y: 0}
     layers:
-    - FirstItemType: 1
-      SecondItemType: 0
+    - FirstItemType: 0
+      SecondItemType: 3
       ThirdItemType: 3
-    - FirstItemType: 4
-      SecondItemType: 13
-      ThirdItemType: 11
   - rowIndex: 0
     columnIndex: 1
-    position: {x: 1.5, y: 0}
+    position: {x: 0.5, y: 0}
     layers:
-    - FirstItemType: 11
-      SecondItemType: 12
-      ThirdItemType: 3
+    - FirstItemType: 0
+      SecondItemType: 2
+      ThirdItemType: 2
   - rowIndex: 1
     columnIndex: 0
-    position: {x: 0, y: 1.5}
+    position: {x: 0, y: 0.75}
     layers:
-    - FirstItemType: 3
-      SecondItemType: 0
-      ThirdItemType: 11
-  - rowIndex: 1
-    columnIndex: 1
-    position: {x: 1.5, y: 1.5}
-    layers:
-    - FirstItemType: 11
-      SecondItemType: 0
-      ThirdItemType: 0
+    - FirstItemType: 0
+      SecondItemType: 2
+      ThirdItemType: 3
