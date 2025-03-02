@@ -7,7 +7,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private LevelData levelData;
     [SerializeField] private ShelfController _shelfController;
 
-    private void Start()
+    public void Initialize()
     {
         InitializeObjectPool();
         InitializeLevel();

@@ -8,7 +8,7 @@ public class ObjectPoolManager : MonoBehaviour
     [SerializeField] private PoolData poolData;
     private Dictionary<ItemType, Queue<ItemController>> poolDictionary;
 
-    private void Awake()
+    public void Initialize()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);

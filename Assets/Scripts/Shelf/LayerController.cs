@@ -66,7 +66,7 @@ public class LayerController : MonoBehaviour
         _backShelfSpaces[2].AttachItem(ObjectPoolManager.Instance.GetFromPool(backLayerData.ThirdItemType));
     }
 
-    public void ChangeLayer()
+    private void ChangeLayer()
     {
         _currentLayerCount++;
         
@@ -131,7 +131,6 @@ public class LayerController : MonoBehaviour
         if (emptyCount == _frontShelfSpaces.Count)
         {
             ChangeLayer();
-            Debug.Log("empty");
         }
     }
 

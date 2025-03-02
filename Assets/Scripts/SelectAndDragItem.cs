@@ -8,9 +8,9 @@ public class SelectAndDragItem : MonoBehaviour
     private float _fixedZ = -.8f; 
     private Transform _lastHoveredShelf = null;
 
-    void Start()
+    public void Initialize(Camera camera)
     {
-        _mainCamera = Camera.main;
+        _mainCamera = camera;
     }
 
     void Update()
