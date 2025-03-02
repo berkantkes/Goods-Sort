@@ -38,6 +38,10 @@ public class ShelfSpaceController : MonoBehaviour
     public ItemType GetAttachedItemType()
     {
         return _attachedItem != null ? _attachedItem.GetItemType() : ItemType.None;
+    }    
+    public ItemController GetAttachedItem()
+    {
+        return _attachedItem;
     }
 
 }

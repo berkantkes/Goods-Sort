@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class LayerController : MonoBehaviour
 {
@@ -9,21 +10,74 @@ public class LayerController : MonoBehaviour
     [SerializeField] private ShelfSpaceController _secondShelfSpace;
     [SerializeField] private ShelfSpaceController _thirdShelfSpace;
 
-    [SerializeField] private List<ShelfSpaceController> _shelfSpaces;
+    [SerializeField] private List<ShelfSpaceController> _frontShelfSpaces;
+    [SerializeField] private List<ShelfSpaceController> _backShelfSpaces;
+
+    private ShelfController _shelfController;
+    private List<LayerData> _layerData;
+    private int _currentLayerCount = 0;
 
     private void Awake()
     {
-        foreach (var shelfSpace in _shelfSpaces)
+        foreach (var shelfSpace in _frontShelfSpaces)
+        {
+            shelfSpace.SetLayer(this);
+        }
+        foreach (var shelfSpace in _backShelfSpaces)
         {
             shelfSpace.SetLayer(this);
         }
     }
 
-    public void SetLayer(LayerData layerData)
+    public void SetShelfController(ShelfController shelfController)
     {
-        _shelfSpaces[0].AttachItem(ObjectPoolManager.Instance.GetFromPool(layerData.FirstItemType));
-        _shelfSpaces[1].AttachItem(ObjectPoolManager.Instance.GetFromPool(layerData.SecondItemType));
-        _shelfSpaces[2].AttachItem(ObjectPoolManager.Instance.GetFromPool(layerData.ThirdItemType));
+        _shelfController = shelfController;
+    }
+
+    public void SetLayerData(List<LayerData> layerData)
+    {
+        _layerData = layerData;
+        SetLayers();
+    }
+
+    private void SetLayers()
+    {
+        if (_currentLayerCount <= _layerData.Count-1)
+        {
+            SetFrontLayer(_layerData[_currentLayerCount]);
+        }
+
+        if (_currentLayerCount+1 <= _layerData.Count-1)
+        {
+            SetBackLayer(_layerData[_currentLayerCount+1]);
+        }
+    }
+    
+    public void SetFrontLayer(LayerData frontLayerData)
+    {
+        _frontShelfSpaces[0].AttachItem(ObjectPoolManager.Instance.GetFromPool(frontLayerData.FirstItemType));
+        _frontShelfSpaces[1].AttachItem(ObjectPoolManager.Instance.GetFromPool(frontLayerData.SecondItemType));
+        _frontShelfSpaces[2].AttachItem(ObjectPoolManager.Instance.GetFromPool(frontLayerData.ThirdItemType));
+    }
+    public void SetBackLayer(LayerData backLayerData)
+    {
+        _backShelfSpaces[0].AttachItem(ObjectPoolManager.Instance.GetFromPool(backLayerData.FirstItemType));
+        _backShelfSpaces[1].AttachItem(ObjectPoolManager.Instance.GetFromPool(backLayerData.SecondItemType));
+        _backShelfSpaces[2].AttachItem(ObjectPoolManager.Instance.GetFromPool(backLayerData.ThirdItemType));
+    }
+
+    public void ChangeLayer()
+    {
+        _currentLayerCount++;
+        
+        _frontShelfSpaces[0].AttachItem(_backShelfSpaces[0].GetAttachedItem());
+        _frontShelfSpaces[1].AttachItem(_backShelfSpaces[1].GetAttachedItem());
+        _frontShelfSpaces[2].AttachItem(_backShelfSpaces[2].GetAttachedItem());
+        
+        if (_currentLayerCount+1 <= _layerData.Count-1)
+        {
+            SetBackLayer(_layerData[_currentLayerCount+1]);
+        }
     }
 
     public void IsMatch()
@@ -31,7 +85,7 @@ public class LayerController : MonoBehaviour
         ItemType matchedItemType = ItemType.None;
         int matchedCount = 0;
 
-        foreach (var shelfSpace in _shelfSpaces)
+        foreach (var shelfSpace in _frontShelfSpaces)
         {
             ItemType currentItemType = shelfSpace.GetAttachedItemType();
 
@@ -47,12 +101,18 @@ public class LayerController : MonoBehaviour
                 return; 
             }
 
-            matchedCount++; // Eşleşen öğe sayısını artır
+            matchedCount++;
         }
 
         if (matchedCount == 3) 
         {
-            Debug.Log("Matced True");
+            foreach (var shelfSpace in _frontShelfSpaces)
+            {
+                ItemController item = shelfSpace.GetAttachedItem();
+                item.ReleaseItem();
+                ObjectPoolManager.Instance.ReturnToPool(item.GetItemType(), item);
+            }
+            ChangeLayer();
         }
     }
     
@@ -60,7 +120,7 @@ public class LayerController : MonoBehaviour
     {
         int emptyCount = 0;
 
-        foreach (var shelfSpace in _shelfSpaces)
+        foreach (var shelfSpace in _frontShelfSpaces)
         {
             if (shelfSpace.IsAvailableShelfSpace()) 
             {
@@ -68,13 +128,12 @@ public class LayerController : MonoBehaviour
             }
         }
 
-        if (emptyCount == _shelfSpaces.Count) 
+        if (emptyCount == _frontShelfSpaces.Count)
         {
+            ChangeLayer();
             Debug.Log("empty");
         }
     }
-
-
 
     public bool IsAvailable(Vector3 point, ItemController item)
     {
@@ -87,7 +146,7 @@ public class LayerController : MonoBehaviour
         }
         else
         {
-            foreach (var shelfSpace in _shelfSpaces)
+            foreach (var shelfSpace in _frontShelfSpaces)
             {
                 if (shelfSpace.IsAvailableShelfSpace())
                 {
@@ -102,7 +161,7 @@ public class LayerController : MonoBehaviour
     
     private ShelfSpaceController GetClosestShelf(Vector3 targetPosition)
     {
-        if (_shelfSpaces == null || _shelfSpaces.Count == 0)
+        if (_frontShelfSpaces == null || _frontShelfSpaces.Count == 0)
         {
             Debug.LogWarning("Shelf listesi boş!");
             return null;
@@ -111,7 +170,7 @@ public class LayerController : MonoBehaviour
         ShelfSpaceController closestShelf = null;
         float shortestDistance = Mathf.Infinity;
 
-        foreach (ShelfSpaceController shelf in _shelfSpaces)
+        foreach (ShelfSpaceController shelf in _frontShelfSpaces)
         {
             float distance = Vector3.Distance(targetPosition, shelf.transform.position);
 
