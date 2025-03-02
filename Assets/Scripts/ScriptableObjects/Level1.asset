@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelNumber: 0
   fieldOfView: 40
-  columns: 1
+  columns: 2
   rows: 2
   spacing: 1.5
   shelfsData:
@@ -28,10 +28,24 @@ MonoBehaviour:
     - FirstItemType: 4
       SecondItemType: 13
       ThirdItemType: 11
-  - rowIndex: 1
-    columnIndex: 0
-    position: {x: 0, y: 1.5}
+  - rowIndex: 0
+    columnIndex: 1
+    position: {x: 1.5, y: 0}
     layers:
     - FirstItemType: 11
       SecondItemType: 12
       ThirdItemType: 3
+  - rowIndex: 1
+    columnIndex: 0
+    position: {x: 0, y: 1.5}
+    layers:
+    - FirstItemType: 3
+      SecondItemType: 0
+      ThirdItemType: 11
+  - rowIndex: 1
+    columnIndex: 1
+    position: {x: 1.5, y: 1.5}
+    layers:
+    - FirstItemType: 11
+      SecondItemType: 0
+      ThirdItemType: 0

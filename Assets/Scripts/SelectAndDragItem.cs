@@ -45,6 +45,7 @@ public class SelectAndDragItem : MonoBehaviour
                     _selectedItem = item;
                     _fixedZ = _selectedItem.transform.position.z; 
                     _offset = _selectedItem.transform.position - GetWorldPosition();
+                    //_selectedItem.transform.position += new Vector3(0, 0, -1);
                 }
             }
         }
@@ -53,12 +54,11 @@ public class SelectAndDragItem : MonoBehaviour
     void MoveItem()
     {
         Vector3 newPosition = GetWorldPosition() + _offset;
-        _selectedItem.transform.position = new Vector3(newPosition.x, newPosition.y, _fixedZ);
+        _selectedItem.transform.position = new Vector3(newPosition.x, newPosition.y, _fixedZ-.7f);
     }
 
     void ReleaseItem()
     {
-        _selectedItem.GoPosition();
         _selectedItem = null;
     }
 
@@ -89,15 +89,19 @@ public class SelectAndDragItem : MonoBehaviour
                 Vector3 lastHitPoint = hit.point;
                 if (!shelf.SetItemToShelf(lastHitPoint, _selectedItem))
                 {
-                    // eski yerine dön
+                    _selectedItem.GoPosition();
                 }
                 
             }
             else
             {
                 _lastHoveredShelf = null;
-                //eski eyrine dön
+                _selectedItem.GoPosition();
             }
+        }
+        else
+        {
+            _selectedItem.GoPosition();
         }
     }
 

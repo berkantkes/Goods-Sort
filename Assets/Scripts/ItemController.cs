@@ -4,6 +4,7 @@ using UnityEngine;
 public class ItemController : MonoBehaviour
 {
     [SerializeField] private ItemType _itemType;
+    
     private ShelfSpaceController _attachedShelfSpace;
 
     public ItemType GetItemType()
@@ -20,6 +21,13 @@ public class ItemController : MonoBehaviour
 
     public void GoPosition()
     {
-        transform.DOMove(_attachedShelfSpace.transform.position, 1.5f);
+        transform.localPosition = Vector3.zero;
+        //transform.DOMove(_attachedShelfSpace.transform.position, 1.5f);
+    }
+
+    public void ReleaseItem()
+    {
+        if (_attachedShelfSpace)
+            _attachedShelfSpace.ReleaseItem();
     }
 }
