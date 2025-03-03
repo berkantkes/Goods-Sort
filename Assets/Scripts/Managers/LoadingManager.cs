@@ -24,32 +24,39 @@ public class LoadingManager : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().name == "StartScene")
         {
-            loadingScreen.SetActive(true); // Loading UI aç
+            loadingScreen.SetActive(true); 
             await LoadSceneAsync("MainScene");
-            SceneManager.UnloadSceneAsync("StartScene"); // StartScene'i kaldır
+            SceneManager.UnloadSceneAsync("StartScene");
         }
     }
 
     public async void LoadGame()
     {
-        loadingScreen.SetActive(true); // Loading UI aç
+        loadingScreen.SetActive(true); 
         await LoadSceneAsync("GameScene");
-        SceneManager.UnloadSceneAsync("MainScene"); // MainScene'i kaldır
+        SceneManager.UnloadSceneAsync("MainScene");
     }
 
     private async Task LoadSceneAsync(string sceneName)
     {
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-        operation.allowSceneActivation = true; // Direkt açılacak
+        operation.allowSceneActivation = true; 
 
         while (!operation.isDone)
         {
             await Task.Yield();
         }
 
-        // Yeni sahneyi aktif yap
         SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
 
-        loadingScreen.SetActive(false); // UI'yi kapat
+        loadingScreen.SetActive(false);
     }
+    
+    public async void LoadMainMenu()
+    {
+        loadingScreen.SetActive(true); 
+        await LoadSceneAsync("MainScene");
+        SceneManager.UnloadSceneAsync("GameScene"); 
+    }
+
 }

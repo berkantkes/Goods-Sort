@@ -114,6 +114,7 @@ public class LayerController : MonoBehaviour
                 item.ReleaseItem();
                 ObjectPoolManager.Instance.ReturnToPool(item.GetItemType(), item);
             }
+            EventManager<Vector3>.Execute(GameEvents.OnMatch, transform.position);
             ChangeLayer();
             _shelfController.ControlGameStatus();
         }

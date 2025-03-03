@@ -49,25 +49,20 @@ public class LevelSelectionManager : MonoBehaviour
         Debug.Log("Seçilen Level: " + levelData.levelNumber);
     }
 
-    // ✅ YENİ LEVEL OLUŞTURAN METOT
     public void CreateNewLevel()
     {
-        // Yeni LevelData oluştur
         LevelData newLevel = ScriptableObject.CreateInstance<LevelData>();
         newLevel.levelNumber = allLevelsData.levels.Length + 1;
 
-        // LevelData'yı asset olarak kaydet (Editör içi işlem)
         string path = $"Assets/Resources/Levels/Level_{newLevel.levelNumber}.asset";
         AssetDatabase.CreateAsset(newLevel, path);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
-        // Listeye ekle
         List<LevelData> levelsList = new List<LevelData>(allLevelsData.levels) { newLevel };
         allLevelsData.levels = levelsList.ToArray();
         EditorUtility.SetDirty(allLevelsData);
 
-        // **Yeni butonu hemen UI'ya ekle**
         CreateLevelButton(newLevel);
     }
 }
