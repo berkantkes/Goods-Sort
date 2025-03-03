@@ -16,6 +16,7 @@ public class GameInstaller : MonoInstaller
         Container.Bind<PlayerProgressManager>().AsSingle();
         Container.Bind<TimerController>().FromComponentInHierarchy().AsSingle().NonLazy();
         Container.Bind<EventManager>().AsSingle();
+        Container.Bind<LoadingManager>().AsSingle();
         Container.Bind<GameUiManager>().FromComponentInHierarchy().AsSingle().NonLazy();
         Container.Bind<SelectAndDragItem>().FromComponentInHierarchy().AsSingle().NonLazy();
 

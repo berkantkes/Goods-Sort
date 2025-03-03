@@ -30,7 +30,7 @@ MonoBehaviour:
       ThirdItemType: 11
   - rowIndex: 0
     columnIndex: 1
-    position: {x: 0, y: 0}
+    position: {x: 1.08, y: 0}
     layers:
     - FirstItemType: 12
       SecondItemType: 13

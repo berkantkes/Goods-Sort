@@ -8,6 +8,7 @@ public class LevelData : ScriptableObject
 {
     public int levelNumber;
     public int fieldOfView = 40;
+    public Vector2 cameraPosition = Vector2.zero;
     public int columns = 1; 
     public int rows = 1;   
     public float spacing = 1.5f; 
@@ -20,6 +21,7 @@ public class LevelData : ScriptableObject
         if (Application.isPlaying)
         {
             FindObjectOfType<LevelManager>()?.ReloadCurrentLevel();
+            FindObjectOfType<LevelEditorManager>()?.SetCamera(cameraPosition, fieldOfView);
         }
     }
 

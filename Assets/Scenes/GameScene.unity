@@ -745,6 +745,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _levelText: {fileID: 1000067511}
+  _successPanel: {fileID: 1590209181}
+  _failPanel: {fileID: 1384575459}
 --- !u!114 &1000067511 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1301002849378102967, guid: 99e116537a9febb409987fd734d0a8f7,
@@ -904,7 +906,7 @@ GameObject:
   - component: {fileID: 1171884608}
   - component: {fileID: 1171884610}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: SceneContext
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

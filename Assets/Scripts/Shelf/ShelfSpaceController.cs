@@ -43,5 +43,4 @@ public class ShelfSpaceController : MonoBehaviour
     {
         return _attachedItem;
     }
-
 }

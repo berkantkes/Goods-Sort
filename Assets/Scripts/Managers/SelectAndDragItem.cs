@@ -9,6 +9,10 @@ public class SelectAndDragItem : MonoBehaviour
     private float _fixedZ = -.8f; 
     private Transform _lastHoveredShelf = null;
 
+    private const string ItemTag = "Item";
+    private const string ItemLayerName = "ItemLayer";
+    private const string ShelfLayerName = "ShelfLayer";
+
     [Inject]
     public void Construct(Camera sceneCamera)
     {
@@ -36,11 +40,11 @@ public class SelectAndDragItem : MonoBehaviour
     {
         Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        int shelfLayerMask = LayerMask.GetMask("ItemLayer"); 
+        int itemLayerMask = LayerMask.GetMask(ItemLayerName); 
 
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, shelfLayerMask))
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, itemLayerMask))
         {
-            if (hit.collider.CompareTag("Item"))
+            if (hit.collider.CompareTag(ItemTag))
             {
                 if (hit.collider.TryGetComponent<ItemController>(out ItemController item))
                 {
@@ -80,7 +84,7 @@ public class SelectAndDragItem : MonoBehaviour
     {
         Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        int shelfLayerMask = LayerMask.GetMask("ShelfLayer"); 
+        int shelfLayerMask = LayerMask.GetMask(ShelfLayerName); 
 
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, shelfLayerMask))
         {

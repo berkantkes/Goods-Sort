@@ -11,14 +11,16 @@ public class LevelManager : MonoBehaviour
     private EventManager _eventManager;
     private DiContainer _container;
     private ShelfController _shelfPrefab;
+    private Camera _camera;
+    private LevelData _levelData;
 
-    private int _currentLevel;
+    private int _currentLevelIndex;
     private List<ShelfController> _spawnedShelves = new List<ShelfController>();
 
     [Inject]
     public void Construct(AllLevelsData allLevelsData, 
         ObjectPoolManager objectPoolManager, PlayerProgressManager playerProgressManager, 
-        EventManager eventManager, DiContainer container, ShelfController shelfPrefab)
+        EventManager eventManager, DiContainer container, ShelfController shelfPrefab, Camera camera)
     {
         _allLevelsData = allLevelsData;
         _objectPoolManager = objectPoolManager;
@@ -26,32 +28,37 @@ public class LevelManager : MonoBehaviour
         _eventManager = eventManager;
         _container = container;
         _shelfPrefab = shelfPrefab;
+        _camera = camera;
     }
 
     public void Initialize()
     {
-        _currentLevel = _playerProgressManager.PlayerLevel;
+        _currentLevelIndex = _playerProgressManager.PlayerLevel;
+        _levelData = _allLevelsData.GetLevel(_currentLevelIndex);
         InitializeObjectPool();
         InitializeLevel();
+        InitializeCamera();
     }
-    
+
     public void ReloadCurrentLevel()
     {
         ClearLevel();
-        Initialize(_currentLevel);
+        Initialize(_currentLevelIndex);
     }
 
     public void Initialize(int levelNumber)
     {
         ClearLevel();
-        _currentLevel = levelNumber;
+        _currentLevelIndex = levelNumber;
+        _levelData = _allLevelsData.GetLevel(_currentLevelIndex);
         InitializeObjectPool();
         InitializeLevel();
+        InitializeCamera();
     }
 
     private void InitializeObjectPool()
     {
-        List<ItemType> allItems = _allLevelsData.GetLevel(_currentLevel).GetAllItemTypesList();
+        List<ItemType> allItems = _levelData.GetAllItemTypesList();
 
         var itemCounts = allItems.GroupBy(x => x)
             .ToDictionary(g => g.Key, g => g.Count());
@@ -65,13 +72,19 @@ public class LevelManager : MonoBehaviour
 
     private void InitializeLevel()
     {
-        foreach (var shelfData in _allLevelsData.GetLevel(_currentLevel).shelfsData)
+        foreach (var shelfData in _levelData.shelfsData)
         {
             // ShelfController prefabını Zenject üzerinden oluştur
             ShelfController shelfController = _container.InstantiatePrefabForComponent<ShelfController>(_shelfPrefab, transform);
             shelfController.SetShelf(shelfData, this);
             _spawnedShelves.Add(shelfController);
         }
+    }
+    
+    private void InitializeCamera()
+    {
+        _camera.transform.position = new Vector3(_levelData.cameraPosition.x, _levelData.cameraPosition.y, _camera.transform.position.z);
+        _camera.fieldOfView = _levelData.fieldOfView;
     }
 
     private void ClearLevel()

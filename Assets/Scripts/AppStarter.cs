@@ -1,18 +1,21 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class AppStarter : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private LoadingManager _loadingManager;
+
+    [Inject]
+    public void Construct(LoadingManager loadingManager)
     {
-        
+        _loadingManager = loadingManager;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Awake()
     {
-        
+        _loadingManager.StartGame();
     }
 }

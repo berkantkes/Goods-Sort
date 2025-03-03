@@ -1,9 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Zenject;
 
 public class LayerController : MonoBehaviour
@@ -19,6 +17,14 @@ public class LayerController : MonoBehaviour
     private EventManager _eventManager;
     private ObjectPoolManager _objectPoolManager;
 
+    private const int firstShelfIndex = 0;
+    private const int secondShelfIndex = 1;
+    private const int thirdShelfIndex = 2;
+    private const int requiredMatchCount = 3;
+
+    private const string ItemTag = "Item";
+    private const string NoneTag = "Untagged";
+
     [Inject]
     public void Construct(LevelManager levelManager, EventManager eventManager, ObjectPoolManager objectPoolManager)
     {
@@ -26,13 +32,16 @@ public class LayerController : MonoBehaviour
         _eventManager = eventManager;
         _objectPoolManager = objectPoolManager;
     }
+
     private void Awake()
     {
-        foreach (var shelfSpace in _frontShelfSpaces)
-        {
-            shelfSpace.SetLayer(this);
-        }
-        foreach (var shelfSpace in _backShelfSpaces)
+        InitializeShelfSpaces(_frontShelfSpaces);
+        InitializeShelfSpaces(_backShelfSpaces);
+    }
+
+    private void InitializeShelfSpaces(List<ShelfSpaceController> shelfSpaces)
+    {
+        foreach (var shelfSpace in shelfSpaces)
         {
             shelfSpace.SetLayer(this);
         }
@@ -45,50 +54,83 @@ public class LayerController : MonoBehaviour
 
     public void SetLayerData(List<LayerData> layerData)
     {
+        if (layerData == null || layerData.Count == 0)
+        {
+            Debug.LogWarning("LayerData list is null or empty!");
+            return;
+        }
+
         _layerData = layerData;
         SetLayers();
     }
 
     private void SetLayers()
     {
-        if (_currentLayerCount <= _layerData.Count-1)
+        if (_layerData == null || _layerData.Count == 0)
+            return;
+
+        int lastLayerIndex = _layerData.Count - 1;
+
+        if (_currentLayerCount <= lastLayerIndex)
         {
-            SetFrontLayer(_layerData[_currentLayerCount]);
+            SetLayerItems(_frontShelfSpaces, _layerData[_currentLayerCount]);
+            UpdateTags(_frontShelfSpaces, ItemTag); // Front shelf'deki item'ların tag'ini güncelle
         }
 
-        if (_currentLayerCount+1 <= _layerData.Count-1)
+        int nextLayerIndex = _currentLayerCount + 1;
+        if (nextLayerIndex <= lastLayerIndex)
         {
-            SetBackLayer(_layerData[_currentLayerCount+1]);
+            SetLayerItems(_backShelfSpaces, _layerData[nextLayerIndex]);
+            UpdateTags(_backShelfSpaces, NoneTag); // Back shelf'deki item'ların tag'ini güncelle
         }
     }
-    
-    public void SetFrontLayer(LayerData frontLayerData)
+
+    private void SetLayerItems(List<ShelfSpaceController> shelfSpaces, LayerData layerData)
     {
-        _frontShelfSpaces[0].AttachItem(_objectPoolManager.GetFromPool(frontLayerData.FirstItemType));
-        _frontShelfSpaces[1].AttachItem(_objectPoolManager.GetFromPool(frontLayerData.SecondItemType));
-        _frontShelfSpaces[2].AttachItem(_objectPoolManager.GetFromPool(frontLayerData.ThirdItemType));
+        if (shelfSpaces == null || shelfSpaces.Count != requiredMatchCount || layerData == null)
+        {
+            Debug.LogWarning("Invalid shelf spaces or layer data!");
+            return;
+        }
+
+        shelfSpaces[firstShelfIndex].AttachItem(_objectPoolManager.GetFromPool(layerData.FirstItemType));
+        shelfSpaces[secondShelfIndex].AttachItem(_objectPoolManager.GetFromPool(layerData.SecondItemType));
+        shelfSpaces[thirdShelfIndex].AttachItem(_objectPoolManager.GetFromPool(layerData.ThirdItemType));
     }
-    public void SetBackLayer(LayerData backLayerData)
+
+    private void UpdateTags(List<ShelfSpaceController> shelfSpaces, string tag)
     {
-        _backShelfSpaces[0].AttachItem(_objectPoolManager.GetFromPool(backLayerData.FirstItemType));
-        _backShelfSpaces[1].AttachItem(_objectPoolManager.GetFromPool(backLayerData.SecondItemType));
-        _backShelfSpaces[2].AttachItem(_objectPoolManager.GetFromPool(backLayerData.ThirdItemType));
+        foreach (var shelfSpace in shelfSpaces)
+        {
+            ItemController item = shelfSpace.GetAttachedItem();
+            if (item != null)
+            {
+                item.gameObject.tag = tag;
+            }
+        }
     }
 
     private void ChangeLayer()
     {
         _currentLayerCount++;
-        
-        _frontShelfSpaces[0].AttachItem(_backShelfSpaces[0].GetAttachedItem());
-        _frontShelfSpaces[1].AttachItem(_backShelfSpaces[1].GetAttachedItem());
-        _frontShelfSpaces[2].AttachItem(_backShelfSpaces[2].GetAttachedItem());
-        
-        if (_currentLayerCount+1 <= _layerData.Count-1)
+
+        for (int i = 0; i < _frontShelfSpaces.Count; i++)
         {
-            SetBackLayer(_layerData[_currentLayerCount+1]);
+            _frontShelfSpaces[i].AttachItem(_backShelfSpaces[i].GetAttachedItem());
+        }
+
+        UpdateTags(_frontShelfSpaces, ItemTag); // Front shelf'deki item'ların tag'ini güncelle
+
+        int nextLayerIndex = _currentLayerCount + 1;
+        int lastLayerIndex = _layerData.Count - 1;
+
+        if (nextLayerIndex <= lastLayerIndex)
+        {
+            SetLayerItems(_backShelfSpaces, _layerData[nextLayerIndex]);
+            UpdateTags(_backShelfSpaces, NoneTag); // Back shelf'deki item'ların tag'ini güncelle
         }
     }
-    
+
     public bool AreAllFrontShelfSpacesEmpty()
     {
         return _frontShelfSpaces.All(space => space.IsAvailableShelfSpace());
@@ -103,48 +145,43 @@ public class LayerController : MonoBehaviour
         {
             ItemType currentItemType = shelfSpace.GetAttachedItemType();
 
-            if (currentItemType == ItemType.None) 
+            if (currentItemType == ItemType.None)
                 continue;
 
             if (matchedItemType == ItemType.None)
             {
-                matchedItemType = currentItemType; 
+                matchedItemType = currentItemType;
             }
             else if (currentItemType != matchedItemType)
             {
-                return; 
+                return;
             }
 
             matchedCount++;
         }
 
-        if (matchedCount == 3) 
+        if (matchedCount == requiredMatchCount)
         {
-            foreach (var shelfSpace in _frontShelfSpaces)
-            {
-                ItemController item = shelfSpace.GetAttachedItem();
-                item.ReleaseItem();
-                _objectPoolManager.ReturnToPool(item.GetItemType(), item);
-            }
-            _eventManager.Execute<Vector3>(GameEvents.OnMatch, transform.position);
+            ReleaseItemsAndNotifyMatch();
             ChangeLayer();
             _shelfController.ControlGameStatus();
         }
     }
-    
-    public void IsEmpty()
-    {
-        int emptyCount = 0;
 
+    private void ReleaseItemsAndNotifyMatch()
+    {
         foreach (var shelfSpace in _frontShelfSpaces)
         {
-            if (shelfSpace.IsAvailableShelfSpace()) 
-            {
-                emptyCount++;
-            }
+            ItemController item = shelfSpace.GetAttachedItem();
+            item.ReleaseItem();
+            _objectPoolManager.ReturnToPool(item.GetItemType(), item);
         }
+        _eventManager.Execute<Vector3>(GameEvents.OnMatch, transform.position);
+    }
 
-        if (emptyCount == _frontShelfSpaces.Count)
+    public void IsEmpty()
+    {
+        if (_frontShelfSpaces.All(space => space.IsAvailableShelfSpace()))
         {
             ChangeLayer();
         }
@@ -154,31 +191,29 @@ public class LayerController : MonoBehaviour
     {
         ShelfSpaceController closestShelfSpace = GetClosestShelf(point);
 
-        if (closestShelfSpace.IsAvailableShelfSpace())
+        if (closestShelfSpace != null && closestShelfSpace.IsAvailableShelfSpace())
         {
             closestShelfSpace.AttachItem(item);
             return true;
         }
-        else
+
+        foreach (var shelfSpace in _frontShelfSpaces)
         {
-            foreach (var shelfSpace in _frontShelfSpaces)
+            if (shelfSpace.IsAvailableShelfSpace())
             {
-                if (shelfSpace.IsAvailableShelfSpace())
-                {
-                    shelfSpace.AttachItem(item);
-                    return true;
-                }
+                shelfSpace.AttachItem(item);
+                return true;
             }
         }
 
         return false;
     }
-    
+
     private ShelfSpaceController GetClosestShelf(Vector3 targetPosition)
     {
         if (_frontShelfSpaces == null || _frontShelfSpaces.Count == 0)
         {
-            Debug.LogWarning("Shelf listesi boş!");
+            Debug.LogWarning("Shelf list is null or empty!");
             return null;
         }
 
@@ -198,7 +233,4 @@ public class LayerController : MonoBehaviour
 
         return closestShelf;
     }
-    
-    
-    
 }

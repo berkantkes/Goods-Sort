@@ -131,7 +131,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _firstLayer: {fileID: 6021610766639423699}
-  _secondLayer: {fileID: 0}
 --- !u!65 &3116748853092326486
 BoxCollider:
   m_ObjectHideFlags: 0

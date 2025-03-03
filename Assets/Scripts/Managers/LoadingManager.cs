@@ -1,46 +1,27 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Threading.Tasks;
+using Zenject;
 
-public class LoadingManager : MonoBehaviour
+public class LoadingManager
 {
-    public static LoadingManager Instance;
-    public GameObject loadingScreen; // UI için referans
+    //private readonly GameObject _loadingScreen;
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
-    private async void Start()
+    public async void StartGame()
     {
         if (SceneManager.GetActiveScene().name == "StartScene")
         {
-            loadingScreen.SetActive(true); 
+            //_loadingScreen.SetActive(true); 
             await LoadSceneAsync("MainScene");
             SceneManager.UnloadSceneAsync("StartScene");
         }
     }
-
-    public async void LoadGame()
+    
+    public async Task LoadSceneAsync(string sceneName)
     {
-        loadingScreen.SetActive(true); 
-        await LoadSceneAsync("GameScene");
-        SceneManager.UnloadSceneAsync("MainScene");
-    }
-
-    private async Task LoadSceneAsync(string sceneName)
-    {
+        //_loadingScreen.SetActive(true);
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-        operation.allowSceneActivation = true; 
+        operation.allowSceneActivation = true;
 
         while (!operation.isDone)
         {
@@ -48,15 +29,18 @@ public class LoadingManager : MonoBehaviour
         }
 
         SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
-
-        loadingScreen.SetActive(false);
+        //_loadingScreen.SetActive(false);
     }
-    
+
+    public async void LoadGame()
+    {
+        await LoadSceneAsync("GameScene");
+        SceneManager.UnloadSceneAsync("MainScene");
+    }
+
     public async void LoadMainMenu()
     {
-        loadingScreen.SetActive(true); 
         await LoadSceneAsync("MainScene");
-        SceneManager.UnloadSceneAsync("GameScene"); 
+        SceneManager.UnloadSceneAsync("GameScene");
     }
-
 }
