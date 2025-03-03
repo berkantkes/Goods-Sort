@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Zenject;
 
 public class LayerController : MonoBehaviour
 {
@@ -14,6 +15,17 @@ public class LayerController : MonoBehaviour
     private List<LayerData> _layerData;
     private int _currentLayerCount = 0;
 
+    private LevelManager _levelManager;
+    private EventManager _eventManager;
+    private ObjectPoolManager _objectPoolManager;
+
+    [Inject]
+    public void Construct(LevelManager levelManager, EventManager eventManager, ObjectPoolManager objectPoolManager)
+    {
+        _levelManager = levelManager;
+        _eventManager = eventManager;
+        _objectPoolManager = objectPoolManager;
+    }
     private void Awake()
     {
         foreach (var shelfSpace in _frontShelfSpaces)
@@ -52,15 +64,15 @@ public class LayerController : MonoBehaviour
     
     public void SetFrontLayer(LayerData frontLayerData)
     {
-        _frontShelfSpaces[0].AttachItem(ObjectPoolManager.Instance.GetFromPool(frontLayerData.FirstItemType));
-        _frontShelfSpaces[1].AttachItem(ObjectPoolManager.Instance.GetFromPool(frontLayerData.SecondItemType));
-        _frontShelfSpaces[2].AttachItem(ObjectPoolManager.Instance.GetFromPool(frontLayerData.ThirdItemType));
+        _frontShelfSpaces[0].AttachItem(_objectPoolManager.GetFromPool(frontLayerData.FirstItemType));
+        _frontShelfSpaces[1].AttachItem(_objectPoolManager.GetFromPool(frontLayerData.SecondItemType));
+        _frontShelfSpaces[2].AttachItem(_objectPoolManager.GetFromPool(frontLayerData.ThirdItemType));
     }
     public void SetBackLayer(LayerData backLayerData)
     {
-        _backShelfSpaces[0].AttachItem(ObjectPoolManager.Instance.GetFromPool(backLayerData.FirstItemType));
-        _backShelfSpaces[1].AttachItem(ObjectPoolManager.Instance.GetFromPool(backLayerData.SecondItemType));
-        _backShelfSpaces[2].AttachItem(ObjectPoolManager.Instance.GetFromPool(backLayerData.ThirdItemType));
+        _backShelfSpaces[0].AttachItem(_objectPoolManager.GetFromPool(backLayerData.FirstItemType));
+        _backShelfSpaces[1].AttachItem(_objectPoolManager.GetFromPool(backLayerData.SecondItemType));
+        _backShelfSpaces[2].AttachItem(_objectPoolManager.GetFromPool(backLayerData.ThirdItemType));
     }
 
     private void ChangeLayer()
@@ -112,9 +124,9 @@ public class LayerController : MonoBehaviour
             {
                 ItemController item = shelfSpace.GetAttachedItem();
                 item.ReleaseItem();
-                ObjectPoolManager.Instance.ReturnToPool(item.GetItemType(), item);
+                _objectPoolManager.ReturnToPool(item.GetItemType(), item);
             }
-            EventManager<Vector3>.Execute(GameEvents.OnMatch, transform.position);
+            _eventManager.Execute<Vector3>(GameEvents.OnMatch, transform.position);
             ChangeLayer();
             _shelfController.ControlGameStatus();
         }

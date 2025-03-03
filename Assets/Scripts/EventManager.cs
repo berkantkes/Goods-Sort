@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
+using Zenject;
 
-public static class EventManager
+public class EventManager
 {
-    private static Dictionary<Enum, Action> events = new Dictionary<Enum, Action>();
+    private Dictionary<Enum, Action> events = new Dictionary<Enum, Action>();
+    private Dictionary<Enum, Delegate> genericEvents = new Dictionary<Enum, Delegate>();
 
-    public static void Subscribe(Enum eventType, Action listener)
+    public void Subscribe(Enum eventType, Action listener)
     {
         if (events.ContainsKey(eventType))
         {
@@ -17,7 +20,7 @@ public static class EventManager
         }
     }
 
-    public static void Unsubscribe(Enum eventType, Action listener)
+    public void Unsubscribe(Enum eventType, Action listener)
     {
         if (events.ContainsKey(eventType))
         {
@@ -25,44 +28,39 @@ public static class EventManager
         }
     }
 
-    public static void Execute(Enum eventType)
+    public void Execute(Enum eventType)
     {
         if (events.ContainsKey(eventType))
         {
             events[eventType]?.Invoke();
         }
     }
-}
 
-public static class EventManager<T>
-{
-    private static Dictionary<Enum, Action<T>> events = new Dictionary<Enum, Action<T>>();
-
-    public static void Subscribe(Enum eventType, Action<T> listener)
+    public void Subscribe<T>(Enum eventType, Action<T> listener)
     {
-        if (events.ContainsKey(eventType))
+        if (genericEvents.ContainsKey(eventType))
         {
-            events[eventType] += listener;
+            genericEvents[eventType] = (Action<T>)genericEvents[eventType] + listener;
         }
         else
         {
-            events[eventType] = listener;
+            genericEvents[eventType] = listener;
         }
     }
 
-    public static void Unsubscribe(Enum eventType, Action<T> listener)
+    public void Unsubscribe<T>(Enum eventType, Action<T> listener)
     {
-        if (events.ContainsKey(eventType))
+        if (genericEvents.ContainsKey(eventType))
         {
-            events[eventType] -= listener;
+            genericEvents[eventType] = (Action<T>)genericEvents[eventType] - listener;
         }
     }
 
-    public static void Execute(Enum eventType, T eventData)
+    public void Execute<T>(Enum eventType, T eventData)
     {
-        if (events.ContainsKey(eventType))
+        if (genericEvents.ContainsKey(eventType) && genericEvents[eventType] is Action<T> action)
         {
-            events[eventType]?.Invoke(eventData);
+            action.Invoke(eventData);
         }
     }
 }

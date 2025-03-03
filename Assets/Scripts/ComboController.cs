@@ -2,17 +2,14 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
-namespace _Game.Scripts.Timer
-{
-    public class ComboController : MonoBehaviour
+public class ComboController : MonoBehaviour
     {
-        #region Variables
-
-        // Public Variables
         public TextMeshProUGUI ComboCountText;
         public Slider ComboSlider;
 
+        private EventManager _eventManager;
         public int ComboCount
         {
             get { return _comboCount; }
@@ -23,21 +20,23 @@ namespace _Game.Scripts.Timer
         [SerializeField] float ComboTime = 25f;
         private float _timer = 0f;
 
-        #endregion
-
+        [Inject]
+        public void Construct(EventManager eventManager)
+        {
+            _eventManager = eventManager;
+        }
         private void Awake()
         {
             ComboCountText.text = string.Empty;
             ComboSlider.value = 0;
 
-            EventManager<Vector3>.Subscribe(GameEvents.OnMatch, Combo);
+            _eventManager.Subscribe<Vector3>(GameEvents.OnMatch, Combo);
             // MatchGroup.OnMatched += Combo;
             // LevelPrefab.OnGameFinished += StopCombo;
         }
-        
         private void OnDestroy()
         {
-            EventManager<Vector3>.Unsubscribe(GameEvents.OnMatch, Combo);
+            _eventManager.Unsubscribe<Vector3>(GameEvents.OnMatch, Combo);
             // MatchGroup.OnMatched -= Combo;
             // LevelPrefab.OnGameFinished -= StopCombo;
         }
@@ -76,4 +75,3 @@ namespace _Game.Scripts.Timer
             ComboCountText.text = string.Empty;
         }
     }
-}

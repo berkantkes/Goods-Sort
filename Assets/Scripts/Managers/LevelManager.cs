@@ -1,19 +1,36 @@
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
 using UnityEngine;
+using Zenject;
 
 public class LevelManager : MonoBehaviour
 {
-    [SerializeField] private AllLevelsData _allLevelsData;
-    [SerializeField] private ShelfController _shelfController;
+    private AllLevelsData _allLevelsData;
+    private ObjectPoolManager _objectPoolManager;
+    private PlayerProgressManager _playerProgressManager;
+    private EventManager _eventManager;
+    private DiContainer _container;
+    private ShelfController _shelfPrefab;
 
     private int _currentLevel;
     private List<ShelfController> _spawnedShelves = new List<ShelfController>();
 
+    [Inject]
+    public void Construct(AllLevelsData allLevelsData, 
+        ObjectPoolManager objectPoolManager, PlayerProgressManager playerProgressManager, 
+        EventManager eventManager, DiContainer container, ShelfController shelfPrefab)
+    {
+        _allLevelsData = allLevelsData;
+        _objectPoolManager = objectPoolManager;
+        _playerProgressManager = playerProgressManager;
+        _eventManager = eventManager;
+        _container = container;
+        _shelfPrefab = shelfPrefab;
+    }
+
     public void Initialize()
     {
-        _currentLevel = PlayerProgressManager.PlayerLevel;
+        _currentLevel = _playerProgressManager.PlayerLevel;
         InitializeObjectPool();
         InitializeLevel();
     }
@@ -41,7 +58,7 @@ public class LevelManager : MonoBehaviour
 
         foreach (var item in itemCounts)
         {
-            ObjectPoolManager.Instance.InitializePool(item.Key, item.Value);
+            _objectPoolManager.InitializePool(item.Key, item.Value);
             Debug.Log($"Pool oluşturuluyor: {item.Key} -> {item.Value} adet");
         }
     }
@@ -50,9 +67,10 @@ public class LevelManager : MonoBehaviour
     {
         foreach (var shelfData in _allLevelsData.GetLevel(_currentLevel).shelfsData)
         {
-            ShelfController shelfController = Instantiate(_shelfController, transform);
+            // ShelfController prefabını Zenject üzerinden oluştur
+            ShelfController shelfController = _container.InstantiatePrefabForComponent<ShelfController>(_shelfPrefab, transform);
             shelfController.SetShelf(shelfData, this);
-            _spawnedShelves.Add(shelfController); // **Oluşturulan shelf'leri listeye ekle**
+            _spawnedShelves.Add(shelfController);
         }
     }
 
@@ -64,7 +82,7 @@ public class LevelManager : MonoBehaviour
         }
         _spawnedShelves.Clear();
 
-        ObjectPoolManager.Instance.ClearAllPools();
+        _objectPoolManager.ClearAllPools();
     }
 
     public void ControlGameStatus()
@@ -73,8 +91,7 @@ public class LevelManager : MonoBehaviour
 
         if (allShelvesEmpty)
         {
-            EventManager.Execute(GameEvents.OnLevelSuccessful);
+            _eventManager.Execute(GameEvents.OnLevelSuccessful);
         }
     }
-
 }

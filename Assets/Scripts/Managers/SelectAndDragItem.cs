@@ -1,4 +1,5 @@
 using UnityEngine;
+using Zenject;
 
 public class SelectAndDragItem : MonoBehaviour
 {
@@ -8,9 +9,10 @@ public class SelectAndDragItem : MonoBehaviour
     private float _fixedZ = -.8f; 
     private Transform _lastHoveredShelf = null;
 
-    public void Initialize(Camera camera)
+    [Inject]
+    public void Construct(Camera sceneCamera)
     {
-        _mainCamera = camera;
+        _mainCamera = sceneCamera;
     }
 
     void Update()
@@ -45,7 +47,6 @@ public class SelectAndDragItem : MonoBehaviour
                     _selectedItem = item;
                     _fixedZ = _selectedItem.transform.position.z; 
                     _offset = _selectedItem.transform.position - GetWorldPosition();
-                    //_selectedItem.transform.position += new Vector3(0, 0, -1);
                 }
             }
         }
@@ -91,7 +92,6 @@ public class SelectAndDragItem : MonoBehaviour
                 {
                     _selectedItem.GoPosition();
                 }
-                
             }
             else
             {
@@ -104,5 +104,4 @@ public class SelectAndDragItem : MonoBehaviour
             _selectedItem.GoPosition();
         }
     }
-
 }

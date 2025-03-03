@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using Zenject;
 
 public class StarController : MonoBehaviour
 {
@@ -14,15 +15,23 @@ public class StarController : MonoBehaviour
 
     private int starCount = 0;
     private List<GameObject> activeStars = new List<GameObject>();
+    private EventManager _eventManager;
 
+    private bool _sceneIsReady = false;
+
+    [Inject]
+    public void Construct(EventManager eventManager)
+    {
+        _eventManager = eventManager;
+    }
     private void Awake()
     {
-        EventManager<Vector3>.Subscribe(GameEvents.OnMatch, SpawnStar);
+        _eventManager.Subscribe<Vector3>(GameEvents.OnMatch, SpawnStar);
     }
 
     private void OnDestroy()
     {
-        EventManager<Vector3>.Unsubscribe(GameEvents.OnMatch, SpawnStar);
+        _eventManager.Unsubscribe<Vector3>(GameEvents.OnMatch, SpawnStar);
     }
 
     private void SpawnStar(Vector3 worldPosition)

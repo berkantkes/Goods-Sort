@@ -1,14 +1,21 @@
 using UnityEngine;
 using TMPro;
+using Zenject;
 
 public class TimerController : MonoBehaviour
 {
+    private EventManager _eventManager;
     public float levelDuration = 120f; 
     private float timer;
     private bool isTimerRunning = false;
 
     public TextMeshProUGUI timerText;
-
+    
+    [Inject]
+    public void Construct(EventManager eventManager)
+    {
+        _eventManager = eventManager;
+    }
     private void Update()
     { 
         if (Input.GetMouseButtonDown(0)) 
@@ -24,7 +31,7 @@ public class TimerController : MonoBehaviour
             {
                 isTimerRunning = false;
                 timer = 0f;
-                EventManager.Execute(GameEvents.OnLevelFail);
+                _eventManager.Execute(GameEvents.OnLevelFail);
                 Debug.Log("Game Fail");
             }
 

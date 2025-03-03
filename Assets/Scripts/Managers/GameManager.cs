@@ -1,19 +1,22 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private LevelManager _levelManager;
-    [SerializeField] private ObjectPoolManager _objectPoolManager;
-    [SerializeField] private SelectAndDragItem _selectAndDragItem;
-    [SerializeField] private Camera _camera;
+    private LevelManager _levelManager;
+    private ObjectPoolManager _objectPoolManager;
 
     private bool _sceneIsReady = false;
+
+    [Inject]
+    public void Construct(LevelManager levelManager, ObjectPoolManager objectPoolManager)
+    {
+        _levelManager = levelManager;
+        _objectPoolManager = objectPoolManager;
+    }
+
     private void Awake()
     {
-        _selectAndDragItem.Initialize(_camera);
         _objectPoolManager.Initialize();
         _levelManager.Initialize();
         _sceneIsReady = true;

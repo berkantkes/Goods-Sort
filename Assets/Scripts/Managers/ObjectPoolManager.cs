@@ -1,27 +1,36 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class ObjectPoolManager : MonoBehaviour
 {
-    public static ObjectPoolManager Instance;
+    private PoolData _poolData;
+    private DiContainer _container;
+    private Dictionary<ItemType, Queue<ItemController>> _poolDictionary = new Dictionary<ItemType, Queue<ItemController>>();
 
-    [SerializeField] private PoolData poolData;
-    private Dictionary<ItemType, Queue<ItemController>> poolDictionary;
+
+    [Inject]
+    public void Construct(PoolData poolData, DiContainer container)
+    {
+        _poolData = poolData;
+        _container = container;
+    }
 
     public void Initialize()
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-        
-        poolDictionary = new Dictionary<ItemType, Queue<ItemController>>();
+        // Eğer başlangıçta bir şeyler yüklemek istiyorsan buraya ekleyebilirsin
     }
 
     public void InitializePool(ItemType itemType, int amount)
     {
-        if (!poolDictionary.ContainsKey(itemType))
-            poolDictionary[itemType] = new Queue<ItemController>();
+        if (_poolDictionary == null)
+        {
+            _poolDictionary = new Dictionary<ItemType, Queue<ItemController>>();
+        }
+        if (!_poolDictionary.ContainsKey(itemType))
+            _poolDictionary[itemType] = new Queue<ItemController>();
 
-        ItemController itemPrefab = poolData.GetItemController(itemType);
+        ItemController itemPrefab = _poolData.GetItemController(itemType);
         if (itemPrefab == null)
         {
             Debug.LogError($"ItemType için prefab bulunamadı: {itemType}");
@@ -30,53 +39,55 @@ public class ObjectPoolManager : MonoBehaviour
 
         for (int i = 0; i < amount; i++)
         {
-            ItemController obj = Instantiate(itemPrefab, transform);
+            ItemController obj = _container.InstantiatePrefabForComponent<ItemController>(itemPrefab);
             obj.gameObject.SetActive(false);
-            poolDictionary[itemType].Enqueue(obj);
+            _poolDictionary[itemType].Enqueue(obj);
         }
     }
 
     public ItemController GetFromPool(ItemType itemType)
     {
-        if (poolDictionary.ContainsKey(itemType) && poolDictionary[itemType].Count > 0)
+        if (_poolDictionary.ContainsKey(itemType) && _poolDictionary[itemType].Count > 0)
         {
-            ItemController obj = poolDictionary[itemType].Dequeue();
+            ItemController obj = _poolDictionary[itemType].Dequeue();
             obj.gameObject.SetActive(true);
             return obj;
         }
-        else
+
+        Debug.LogWarning($"Poolda {itemType} kalmadı, yeni oluşturuluyor...");
+        ItemController itemPrefab = _poolData.GetItemController(itemType);
+        if (itemPrefab != null)
         {
-            Debug.LogWarning($"Poolda {itemType} kalmadı, yeni oluşturuluyor...");
-            ItemController itemPrefab = poolData.GetItemController(itemType);
-            if (itemPrefab != null)
-            {
-                ItemController obj = Instantiate(itemPrefab);
-                obj.gameObject.SetActive(true);
-                return obj;
-            }
+            ItemController obj = _container.InstantiatePrefabForComponent<ItemController>(itemPrefab);
+            obj.gameObject.SetActive(true);
+            return obj;
         }
+
+        //Debug.LogError($"Yeni {itemType} oluşturulamadı! PoolData'da prefab bulunmuyor.");
         return null;
     }
 
     public void ReturnToPool(ItemType itemType, ItemController obj)
     {
+        if (!_poolDictionary.ContainsKey(itemType))
+            _poolDictionary[itemType] = new Queue<ItemController>();
+
         obj.gameObject.SetActive(false);
-        poolDictionary[itemType].Enqueue(obj);
+        _poolDictionary[itemType].Enqueue(obj);
     }
 
     public void ClearAllPools()
     {
-        foreach (var pool in poolDictionary)
+        foreach (var pool in _poolDictionary)
         {
             while (pool.Value.Count > 0)
             {
                 ItemController obj = pool.Value.Dequeue();
-                obj.gameObject.SetActive(false);  // **Sadece devre dışı bırak**
+                obj.gameObject.SetActive(false);
             }
         }
 
-        poolDictionary.Clear(); // Havuzu sıfırla
+        _poolDictionary.Clear();
         Debug.Log("Tüm object pool'lar temizlendi!");
     }
-
 }

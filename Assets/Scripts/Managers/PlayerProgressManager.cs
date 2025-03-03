@@ -1,44 +1,45 @@
 using UnityEngine;
+using Zenject;
 
-public static class PlayerProgressManager
+public class PlayerProgressManager
 {
     private const string GOLD_KEY = "PlayerGold";
     private const string LEVEL_KEY = "PlayerLevel";
 
-    public static int PlayerGold { get; private set; }
-    public static int PlayerLevel { get; private set; }
+    public int PlayerGold { get; private set; }
+    public int PlayerLevel { get; private set; }
 
-    static PlayerProgressManager()
+    public PlayerProgressManager()
     {
         LoadProgress();
     }
 
-    public static void AddGold(int amount)
+    public void AddGold(int amount)
     {
         PlayerGold += amount;
         SaveProgress();
     }
 
-    public static void LevelUp()
+    public void LevelUp()
     {
         PlayerLevel++;
         SaveProgress();
     }
 
-    private static void SaveProgress()
+    private void SaveProgress()
     {
         PlayerPrefs.SetInt(GOLD_KEY, PlayerGold);
         PlayerPrefs.SetInt(LEVEL_KEY, PlayerLevel);
         PlayerPrefs.Save();
     }
 
-    private static void LoadProgress()
+    private void LoadProgress()
     {
         PlayerGold = PlayerPrefs.GetInt(GOLD_KEY, 0);
         PlayerLevel = PlayerPrefs.GetInt(LEVEL_KEY, 1);
     }
 
-    public static void ResetProgress()
+    public void ResetProgress()
     {
         PlayerGold = 0;
         PlayerLevel = 1;
