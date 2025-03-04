@@ -21,6 +21,7 @@ public class TimerController : MonoBehaviour
     private void OnEnable()
     {
         _eventManager.Subscribe(GameEvents.OnLevelSuccessful, StopTimer);
+        UpdateTimerUI();
     }
     private void OnDisable()
     {
