@@ -13,8 +13,147 @@ MonoBehaviour:
   m_Name: Level_4
   m_EditorClassIdentifier: 
   levelNumber: 4
-  fieldOfView: 40
-  columns: 1
-  rows: 1
+  size: 3.5
+  cameraPosition: {x: 1, y: 2}
+  columns: 3
+  rows: 4
   spacing: 1.5
-  shelfsData: []
+  shelfsData:
+  - rowIndex: 0
+    columnIndex: 0
+    position: {x: 0, y: 0}
+    layers:
+    - FirstItemType: 5
+      SecondItemType: 6
+      ThirdItemType: 6
+    - FirstItemType: 0
+      SecondItemType: 13
+      ThirdItemType: 13
+  - rowIndex: 0
+    columnIndex: 1
+    position: {x: 1, y: 0}
+    layers:
+    - FirstItemType: 0
+      SecondItemType: 7
+      ThirdItemType: 7
+    - FirstItemType: 12
+      SecondItemType: 3
+      ThirdItemType: 12
+    - FirstItemType: 0
+      SecondItemType: 9
+      ThirdItemType: 9
+  - rowIndex: 0
+    columnIndex: 2
+    position: {x: 2, y: 0}
+    layers:
+    - FirstItemType: 8
+      SecondItemType: 9
+      ThirdItemType: 8
+    - FirstItemType: 0
+      SecondItemType: 8
+      ThirdItemType: 8
+  - rowIndex: 1
+    columnIndex: 0
+    position: {x: 0, y: 0.7}
+    layers:
+    - FirstItemType: 0
+      SecondItemType: 0
+      ThirdItemType: 5
+    - FirstItemType: 0
+      SecondItemType: 10
+      ThirdItemType: 10
+    - FirstItemType: 0
+      SecondItemType: 3
+      ThirdItemType: 3
+  - rowIndex: 1
+    columnIndex: 1
+    position: {x: 1, y: 0.7}
+    layers:
+    - FirstItemType: 0
+      SecondItemType: 10
+      ThirdItemType: 10
+    - FirstItemType: 0
+      SecondItemType: 0
+      ThirdItemType: 7
+    - FirstItemType: 0
+      SecondItemType: 6
+      ThirdItemType: 6
+  - rowIndex: 1
+    columnIndex: 2
+    position: {x: 2, y: 0.7}
+    layers:
+    - FirstItemType: 0
+      SecondItemType: 0
+      ThirdItemType: 11
+    - FirstItemType: 10
+      SecondItemType: 0
+      ThirdItemType: 0
+    - FirstItemType: 9
+      SecondItemType: 3
+      ThirdItemType: 0
+  - rowIndex: 2
+    columnIndex: 0
+    position: {x: 0, y: 1.4}
+    layers:
+    - FirstItemType: 12
+      SecondItemType: 8
+      ThirdItemType: 8
+    - FirstItemType: 4
+      SecondItemType: 0
+      ThirdItemType: 4
+  - rowIndex: 2
+    columnIndex: 1
+    position: {x: 1, y: 1.4}
+    layers:
+    - FirstItemType: 12
+      SecondItemType: 12
+      ThirdItemType: 10
+    - FirstItemType: 11
+      SecondItemType: 0
+      ThirdItemType: 5
+  - rowIndex: 2
+    columnIndex: 2
+    position: {x: 2, y: 1.4}
+    layers:
+    - FirstItemType: 11
+      SecondItemType: 11
+      ThirdItemType: 8
+    - FirstItemType: 6
+      SecondItemType: 0
+      ThirdItemType: 9
+  - rowIndex: 3
+    columnIndex: 0
+    position: {x: 0, y: 2.1}
+    layers:
+    - FirstItemType: 0
+      SecondItemType: 0
+      ThirdItemType: 13
+    - FirstItemType: 3
+      SecondItemType: 1
+      ThirdItemType: 1
+    - FirstItemType: 0
+      SecondItemType: 0
+      ThirdItemType: 1
+  - rowIndex: 3
+    columnIndex: 1
+    position: {x: 1, y: 2.1}
+    layers:
+    - FirstItemType: 0
+      SecondItemType: 12
+      ThirdItemType: 3
+    - FirstItemType: 8
+      SecondItemType: 4
+      ThirdItemType: 0
+    - FirstItemType: 0
+      SecondItemType: 0
+      ThirdItemType: 8
+  - rowIndex: 3
+    columnIndex: 2
+    position: {x: 2, y: 2.1}
+    layers:
+    - FirstItemType: 11
+      SecondItemType: 0
+      ThirdItemType: 6
+    - FirstItemType: 11
+      SecondItemType: 0
+      ThirdItemType: 9

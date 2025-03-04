@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Linq;
 
 [CreateAssetMenu(fileName = "AllLevelsData", menuName = "Match3/All Levels Data")]
 public class AllLevelsData : ScriptableObject
@@ -7,11 +8,16 @@ public class AllLevelsData : ScriptableObject
 
     public LevelData GetLevel(int levelNumber)
     {
-        foreach (var level in levels)
+        LevelData foundLevel = levels.FirstOrDefault(level => level.levelNumber == levelNumber);
+
+        if (foundLevel != null)
+            return foundLevel;
+
+        if (levels.Length > 1)
         {
-            if (level.levelNumber == levelNumber)
-                return level;
+            return levels[Random.Range(1, levels.Length)];
         }
-        return null;
+
+        return null; 
     }
 }

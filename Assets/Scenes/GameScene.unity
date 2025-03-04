@@ -96,8 +96,10 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
-  m_LightingSettings: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: a4fe37bbbd1b5d94e83248a7d67b3ee9,
+    type: 2}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 5bea3b1371d8a444a94578b20cc0aa1f,
+    type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -135,7 +137,7 @@ GameObject:
   - component: {fileID: 49857648}
   - component: {fileID: 49857647}
   m_Layer: 5
-  m_Name: LevelCompletedButton
+  m_Name: LevelFailButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -384,7 +386,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 39
-  orthographic: 0
+  orthographic: 1
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:
@@ -409,13 +411,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0.052335896, y: 0, z: 0, w: 0.9986295}
   m_LocalPosition: {x: 0, y: 1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 6, y: 0, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1437,7 +1439,7 @@ MonoBehaviour:
     type: 3}
   starIcon: {fileID: 1572573773}
   moveDuration: 1
-  spawnRandomRange: 2
+  spawnRandomRange: 200
 --- !u!1 &1590209181
 GameObject:
   m_ObjectHideFlags: 0
@@ -1711,7 +1713,7 @@ GameObject:
   - component: {fileID: 2071892561}
   - component: {fileID: 2071892560}
   m_Layer: 5
-  m_Name: LevelCompletedButtonText
+  m_Name: LevelFailButtonText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1756,7 +1758,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: LEVEL COMPLETED
+  m_text: LEVEL FAIL
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 605433b68313d491a8ab88bc03a41651, type: 2}
   m_sharedMaterial: {fileID: 2830636965969884548, guid: 605433b68313d491a8ab88bc03a41651,
@@ -1784,7 +1786,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 104.9
+  m_fontSize: 117.8
   m_fontSizeBase: 54
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1937,6 +1939,11 @@ PrefabInstance:
       propertyPath: timerText
       value: 
       objectReference: {fileID: 1572573772}
+    - target: {fileID: 654083643877588984, guid: d50bb97f3da0cec48a6051ed67680a51,
+        type: 3}
+      propertyPath: levelDuration
+      value: 120
+      objectReference: {fileID: 0}
     - target: {fileID: 1221374150008825418, guid: d50bb97f3da0cec48a6051ed67680a51,
         type: 3}
       propertyPath: _camera

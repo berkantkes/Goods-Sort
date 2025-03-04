@@ -28,9 +28,14 @@ public class LevelEditorManager : MonoBehaviour
         _levelManager.Initialize(levelNumber);
     }
 
-    public void SetCamera(Vector2 cameraPosition, int fieldOfView)
+    public void SetCamera(Vector2 cameraPosition, float size)
     {
         _camera.transform.position = new Vector3(cameraPosition.x, cameraPosition.y, _camera.transform.position.z);
-        _camera.fieldOfView = fieldOfView;
+        _camera.orthographicSize = size;
+    }
+
+    public void ReloadCurrentLevel()
+    {
+        _levelManager.ReloadCurrentLevel();
     }
 }

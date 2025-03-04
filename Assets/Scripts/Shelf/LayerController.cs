@@ -121,7 +121,7 @@ public class LayerController : MonoBehaviour
             _frontShelfSpaces[i].AttachItem(_backShelfSpaces[i].GetAttachedItem());
         }
 
-        UpdateTags(_frontShelfSpaces, ItemTag); // Front shelf'deki item'ların tag'ini güncelle
+        UpdateTags(_frontShelfSpaces, ItemTag);
 
         int nextLayerIndex = _currentLayerCount + 1;
         int lastLayerIndex = _layerData.Count - 1;
@@ -129,7 +129,7 @@ public class LayerController : MonoBehaviour
         if (nextLayerIndex <= lastLayerIndex)
         {
             SetLayerItems(_backShelfSpaces, _layerData[nextLayerIndex]);
-            UpdateTags(_backShelfSpaces, NoneTag); // Back shelf'deki item'ların tag'ini güncelle
+            UpdateTags(_backShelfSpaces, NoneTag); 
         }
     }
 

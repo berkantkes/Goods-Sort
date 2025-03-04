@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 public class LevelData : ScriptableObject
 {
     public int levelNumber;
-    public int fieldOfView = 40;
+    public float size = 4;
     public Vector2 cameraPosition = Vector2.zero;
     public int columns = 1; 
     public int rows = 1;   
@@ -20,12 +20,11 @@ public class LevelData : ScriptableObject
         
         if (Application.isPlaying)
         {
-            FindObjectOfType<LevelManager>()?.ReloadCurrentLevel();
-            FindObjectOfType<LevelEditorManager>()?.SetCamera(cameraPosition, fieldOfView);
+            FindObjectOfType<LevelEditorManager>()?.SetCamera(cameraPosition, size);
         }
     }
 
-    public void AdjustShelfs()
+    private void AdjustShelfs()
     {
         int totalShelfs = columns * rows;
 

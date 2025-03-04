@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Level_2
   m_EditorClassIdentifier: 
   levelNumber: 2
-  fieldOfView: 40
-  cameraPosition: {x: 1.01, y: 1.42}
+  size: 3.5
+  cameraPosition: {x: 1, y: 2}
   columns: 3
   rows: 4
   spacing: 1.5
@@ -68,7 +68,7 @@ MonoBehaviour:
       ThirdItemType: 0
     - FirstItemType: 0
       SecondItemType: 13
-      ThirdItemType: 0
+      ThirdItemType: 5
   - rowIndex: 1
     columnIndex: 2
     position: {x: 2, y: 0.7}

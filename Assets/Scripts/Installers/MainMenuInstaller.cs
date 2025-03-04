@@ -9,5 +9,6 @@ public class MainMenuInstaller : MonoInstaller
     {
         Container.Bind<LoadingManager>().AsSingle();
         Container.Bind<MainMenu>().FromComponentInHierarchy().AsSingle().NonLazy();
+        Container.Bind<PlayerProgressManager>().AsSingle();
     }
 }

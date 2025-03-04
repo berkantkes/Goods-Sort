@@ -33,10 +33,12 @@ public class ComboController : MonoBehaviour
             _comboSlider.value = 0;
 
             _eventManager.Subscribe<Vector3>(GameEvents.OnMatch, Combo);
+            _eventManager.Subscribe(GameEvents.OnLevelSuccessful, StopCombo);
         }
         private void OnDisable()
         {
             _eventManager.Unsubscribe<Vector3>(GameEvents.OnMatch, Combo);
+            _eventManager.Unsubscribe(GameEvents.OnLevelSuccessful, StopCombo);
         }
 
 
@@ -52,7 +54,7 @@ public class ComboController : MonoBehaviour
             _comboCoroutine = StartCoroutine(StartComboCor());
         }
 
-        public void StopCombo(bool isWin, bool isAllLinesFilled)
+        private void StopCombo()
         {
             if (_comboCoroutine != null) StopCoroutine(_comboCoroutine);
         }

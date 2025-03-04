@@ -12,7 +12,7 @@ public class StarController : MonoBehaviour
     public GameObject starPrefab;
     public Transform starIcon;
     public float moveDuration = 1.5f;
-    public float spawnRandomRange = 2f; 
+    [SerializeField] private float spawnRandomRange = 200f; 
 
     private int starCount = 0;
     private List<GameObject> activeStars = new List<GameObject>();

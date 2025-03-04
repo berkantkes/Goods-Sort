@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using TMPro;
 using Zenject;
@@ -5,7 +6,7 @@ using Zenject;
 public class TimerController : MonoBehaviour
 {
     private EventManager _eventManager;
-    public float levelDuration = 120f; 
+    public float levelDuration = 10f; 
     private float timer;
     private bool isTimerRunning = false;
 
@@ -16,6 +17,16 @@ public class TimerController : MonoBehaviour
     {
         _eventManager = eventManager;
     }
+
+    private void OnEnable()
+    {
+        _eventManager.Subscribe(GameEvents.OnLevelSuccessful, StopTimer);
+    }
+    private void OnDisable()
+    {
+        _eventManager.Unsubscribe(GameEvents.OnLevelSuccessful, StopTimer);
+    }
+
     private void Update()
     { 
         if (Input.GetMouseButtonDown(0)) 
@@ -39,12 +50,19 @@ public class TimerController : MonoBehaviour
         }
     }
 
-    public void StartTimer()
+    private void StartTimer()
     {
         if (!isTimerRunning)
         {
             timer = levelDuration;
             isTimerRunning = true;
+        }
+    }
+    private void StopTimer()
+    {
+        if (isTimerRunning)
+        {
+            isTimerRunning = false;
         }
     }
 

@@ -84,7 +84,7 @@ public class LevelManager : MonoBehaviour
     private void InitializeCamera()
     {
         _camera.transform.position = new Vector3(_levelData.cameraPosition.x, _levelData.cameraPosition.y, _camera.transform.position.z);
-        _camera.fieldOfView = _levelData.fieldOfView;
+        _camera.orthographicSize = _levelData.size;
     }
 
     private void ClearLevel()

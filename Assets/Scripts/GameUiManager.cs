@@ -47,6 +47,7 @@ public class GameUiManager : MonoBehaviour
 
     private void OpenSuccessPanel()
     {
+        _playerProgressManager.LevelUp();
         _successPanel.SetActive(true);
     }
     private void OpenFailPanel()
