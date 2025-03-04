@@ -165,8 +165,6 @@ public class LayerController : MonoBehaviour
         if (matchedCount == requiredMatchCount)
         {
             ReleaseItemsAndNotifyMatch();
-            ChangeLayer();
-            _shelfController.ControlGameStatus();
         }
     }
 
@@ -182,6 +180,8 @@ public class LayerController : MonoBehaviour
         await UniTask.Delay(200);
 
         _eventManager.Execute<Vector3>(GameEvents.OnMatch, transform.position);
+        ChangeLayer();
+        _shelfController.ControlGameStatus();
     }
 
     public void IsEmpty()

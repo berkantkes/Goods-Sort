@@ -21,12 +21,17 @@ public class ShelfSpaceController : MonoBehaviour
         item.ReleaseItem();
         _attachedItem = item;
         _attachedItem.SetShelfSpace(this);
+        _attachedItem.OldShelfCheckIsEmpty();
         _layerController.IsMatch();
     }
 
-    public void ReleaseItem()
+    public void ReleaseAttachedItem()
     {
         _attachedItem = null;
+    }
+
+    public void CheckIsEmpty()
+    {
         _layerController.IsEmpty();
     }
 
