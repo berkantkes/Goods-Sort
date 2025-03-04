@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        _objectPoolManager.Initialize();
+        //_objectPoolManager.Initialize();
         _levelManager.Initialize();
         _sceneIsReady = true;
     }

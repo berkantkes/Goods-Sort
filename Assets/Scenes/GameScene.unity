@@ -1437,6 +1437,7 @@ MonoBehaviour:
     type: 3}
   starIcon: {fileID: 1572573773}
   moveDuration: 1
+  spawnRandomRange: 2
 --- !u!1 &1590209181
 GameObject:
   m_ObjectHideFlags: 0
@@ -1556,9 +1557,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c3572911983b3e48994d13cf87f74d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ComboCountText: {fileID: 1827604713}
-  ComboSlider: {fileID: 1827604714}
-  ComboTime: 25
+  _comboCountText: {fileID: 1827604713}
+  _comboSlider: {fileID: 1827604714}
+  _comboTime: 25
 --- !u!1001 &2056707468
 PrefabInstance:
   m_ObjectHideFlags: 0

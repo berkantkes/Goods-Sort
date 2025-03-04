@@ -1,23 +1,25 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Zenject;
 
 public class ComboController : MonoBehaviour
     {
-        public TextMeshProUGUI ComboCountText;
-        public Slider ComboSlider;
+        [SerializeField] private TextMeshProUGUI _comboCountText;
+        [SerializeField] private Slider _comboSlider;
+        [SerializeField] private float _comboTime = 25f;
 
         private EventManager _eventManager;
+        private StarController _starController;
+        private Coroutine _comboCoroutine;
         public int ComboCount
         {
             get { return _comboCount; }
         }
 
-        // Private Variables
         private int _comboCount = 0;
-        [SerializeField] float ComboTime = 25f;
         private float _timer = 0f;
 
         [Inject]
@@ -25,53 +27,48 @@ public class ComboController : MonoBehaviour
         {
             _eventManager = eventManager;
         }
-        private void Awake()
+        private void OnEnable()
         {
-            ComboCountText.text = string.Empty;
-            ComboSlider.value = 0;
+            _comboCountText.text = string.Empty;
+            _comboSlider.value = 0;
 
             _eventManager.Subscribe<Vector3>(GameEvents.OnMatch, Combo);
-            // MatchGroup.OnMatched += Combo;
-            // LevelPrefab.OnGameFinished += StopCombo;
         }
-        private void OnDestroy()
+        private void OnDisable()
         {
             _eventManager.Unsubscribe<Vector3>(GameEvents.OnMatch, Combo);
-            // MatchGroup.OnMatched -= Combo;
-            // LevelPrefab.OnGameFinished -= StopCombo;
         }
 
-        Coroutine ComboCoroutine;
 
         public void Combo(Vector3 position)
         {
             if (!gameObject.activeInHierarchy)
                 return;
             _comboCount++;
-            ComboCountText.text = "x" + _comboCount.ToString();
-            _timer = ComboTime - _comboCount;
+            _comboCountText.text = "x" + _comboCount.ToString();
+            _timer = _comboTime - _comboCount;
 
-            if (ComboCoroutine != null) StopCoroutine(ComboCoroutine);
-            ComboCoroutine = StartCoroutine(StartComboCor());
+            if (_comboCoroutine != null) StopCoroutine(_comboCoroutine);
+            _comboCoroutine = StartCoroutine(StartComboCor());
         }
 
         public void StopCombo(bool isWin, bool isAllLinesFilled)
         {
-            if (ComboCoroutine != null) StopCoroutine(ComboCoroutine);
+            if (_comboCoroutine != null) StopCoroutine(_comboCoroutine);
         }
 
         private IEnumerator StartComboCor()
         {
-            ComboSlider.value = _timer / (ComboTime - _comboCount);
+            _comboSlider.value = _timer / (_comboTime - _comboCount);
 
             while (_timer > 0)
             {
                 _timer -= Time.deltaTime;
-                ComboSlider.value = _timer / (ComboTime - _comboCount);
+                _comboSlider.value = _timer / (_comboTime - _comboCount);
                 yield return null;
             }
 
             _comboCount = 0;
-            ComboCountText.text = string.Empty;
+            _comboCountText.text = string.Empty;
         }
     }

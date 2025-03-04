@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 using Zenject;
 
@@ -168,14 +170,17 @@ public class LayerController : MonoBehaviour
         }
     }
 
-    private void ReleaseItemsAndNotifyMatch()
+    private async void ReleaseItemsAndNotifyMatch()
     {
         foreach (var shelfSpace in _frontShelfSpaces)
         {
             ItemController item = shelfSpace.GetAttachedItem();
-            item.ReleaseItem();
-            _objectPoolManager.ReturnToPool(item.GetItemType(), item);
+            item.MatchItem();
+            //_objectPoolManager.ReturnToPool(item.GetItemType(), item);
         }
+        
+        await UniTask.Delay(200);
+
         _eventManager.Execute<Vector3>(GameEvents.OnMatch, transform.position);
     }
 

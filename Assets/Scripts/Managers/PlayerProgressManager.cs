@@ -36,7 +36,7 @@ public class PlayerProgressManager
     private void LoadProgress()
     {
         PlayerGold = PlayerPrefs.GetInt(GOLD_KEY, 0);
-        PlayerLevel = PlayerPrefs.GetInt(LEVEL_KEY, 1);
+        PlayerLevel = PlayerPrefs.GetInt(LEVEL_KEY, 2);
     }
 
     public void ResetProgress()

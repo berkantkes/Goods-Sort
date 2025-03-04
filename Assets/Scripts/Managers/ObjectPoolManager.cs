@@ -7,18 +7,12 @@ public class ObjectPoolManager : MonoBehaviour
     private PoolData _poolData;
     private DiContainer _container;
     private Dictionary<ItemType, Queue<ItemController>> _poolDictionary = new Dictionary<ItemType, Queue<ItemController>>();
-
-
+    
     [Inject]
     public void Construct(PoolData poolData, DiContainer container)
     {
         _poolData = poolData;
         _container = container;
-    }
-
-    public void Initialize()
-    {
-        // Eğer başlangıçta bir şeyler yüklemek istiyorsan buraya ekleyebilirsin
     }
 
     public void InitializePool(ItemType itemType, int amount)
@@ -40,6 +34,7 @@ public class ObjectPoolManager : MonoBehaviour
         for (int i = 0; i < amount; i++)
         {
             ItemController obj = _container.InstantiatePrefabForComponent<ItemController>(itemPrefab);
+            obj.Initialize(this);
             obj.gameObject.SetActive(false);
             _poolDictionary[itemType].Enqueue(obj);
         }
@@ -63,7 +58,6 @@ public class ObjectPoolManager : MonoBehaviour
             return obj;
         }
 
-        //Debug.LogError($"Yeni {itemType} oluşturulamadı! PoolData'da prefab bulunmuyor.");
         return null;
     }
 

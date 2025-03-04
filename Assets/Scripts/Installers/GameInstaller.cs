@@ -19,6 +19,8 @@ public class GameInstaller : MonoInstaller
         Container.Bind<LoadingManager>().AsSingle();
         Container.Bind<GameUiManager>().FromComponentInHierarchy().AsSingle().NonLazy();
         Container.Bind<SelectAndDragItem>().FromComponentInHierarchy().AsSingle().NonLazy();
+        Container.Bind<StarController>().FromComponentInHierarchy().AsSingle().NonLazy();
+        Container.Bind<ComboController>().FromComponentInHierarchy().AsSingle().NonLazy();
 
         Container.BindInstance(allLevelsData);
         Container.BindInstance(poolData);

@@ -21,22 +21,22 @@ MonoBehaviour:
   shelfsData:
   - rowIndex: 0
     columnIndex: 0
-    position: {x: 0.5, y: 0.7}
-    layers:
-    - FirstItemType: 0
-      SecondItemType: 3
-      ThirdItemType: 3
-  - rowIndex: 0
-    columnIndex: 1
     position: {x: 0, y: 0}
     layers:
     - FirstItemType: 0
       SecondItemType: 2
       ThirdItemType: 2
+  - rowIndex: 0
+    columnIndex: 1
+    position: {x: 0.5, y: 0.7}
+    layers:
+    - FirstItemType: 0
+      SecondItemType: 2
+      ThirdItemType: 3
   - rowIndex: 1
     columnIndex: 0
     position: {x: 1, y: 0}
     layers:
     - FirstItemType: 0
-      SecondItemType: 2
+      SecondItemType: 3
       ThirdItemType: 3

@@ -13,7 +13,7 @@ public class LevelEditorManager : MonoBehaviour
     private bool _sceneIsReady = false;
     private void Awake()
     {
-        _objectPoolManager.Initialize();
+        //_objectPoolManager.Initialize();
         CreateLevel(1);
     }
 
